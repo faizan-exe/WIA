@@ -12,8 +12,8 @@ const Footer = () => {
         <div className='my-2'>
           <div className='flex mb-1'>
             <img
-              src={require('assets/awsar.png')}
-              className='px-2 h-10'
+              src={require('assets/logo.png')}
+              className='px-2 h-16'
               alt='Awsar Logo'
             />
           </div>
@@ -37,7 +37,7 @@ const Footer = () => {
         </div>
       </div>
       <div className='copyright-bar bg-purple-800'>
-        <h6 className='text-sm'>@2020 Team Alpha. All Rights Reserved.</h6>
+        <h6 className='text-sm'>@2024 Team WIA. All Rights Reserved.</h6>
         <div>
           <Link to='/'>Contact us</Link>
           <Link to='/'>Provide feedback</Link>

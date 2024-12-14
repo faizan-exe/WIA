@@ -18,8 +18,8 @@ const Navbar = ({ user, setUser }) => {
       <div className='top-nav bg-gray-300 flex justify-between items-center px-2 py-1'>
         <div className='flex items-center'>
           <img
-            src={require('assets/awsar.png')}
-            className='px-2 h-10'
+            src={require('assets/logo.png')}
+            className='px-2 h-16'
             alt='Awsar Logo'
           />
         </div>

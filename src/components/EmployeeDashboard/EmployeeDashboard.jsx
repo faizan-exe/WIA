@@ -88,7 +88,7 @@ function EmployeeDashboard({ user }) {
           <div className='p-8 m-3 border-4 border-purple-800'>
             <img
               className='w-40 mb-3 m-auto'
-              src={require('assets/awsar.png')}
+              src={require('assets/logo.png')}
               alt='Awsar logo'
             />
             <h1 className='uppercase tracking-wide text-3xl font-bold text-purple-900 text-center mb-3'>
