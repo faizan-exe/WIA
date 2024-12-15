@@ -1,123 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
 
-import { GlobalStyles } from 'styles/globalStyles';
-
-import Navbar from 'components/layout/Navbar';
-import Footer from 'components/layout/Footer';
-import Login from 'components/Login';
-import Signup from 'components/Signup';
-import CreateProfile from 'components/CreateProfile';
-import UpdateProfile from 'components/UpdateProfile';
-import Profile from 'components/Profile';
-import OrgProfile from 'components/OrgProfile';
-import EmployeeDashboard from 'components/EmployeeDashboard';
-import OrgDashboard from 'components/OrgDashboard';
-import JobApplicants from 'components/JobApplicants';
-import CreateJob from 'components/CreateJob';
-import Jobs from 'components/Jobs';
-import Job from 'components/Job';
-import UpdateJob from 'components/UpdateJob';
-import RecommendedJobs from 'components/RecommendedJobs';
-import Courses from 'components/Courses';
-import Error404 from 'components/Error404';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import CreateProfile from "./pages/create-profile";
+import Profile from "./pages/profile";
+import AddJob from "./pages/add-job";
+import OrgJobs from "./pages/organization-jobs";
+import Jobs from "./pages/jobs";
+import AddAdvertisement from "./pages/add-ad";
+import MyAd from "./pages/my-ad";
+import Mentors from "./pages/mentor";
+import Courses from "./pages/courses";
+import SpecificProfile from "./pages/profile/specificProfile";
 
 function App() {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const userDetails = JSON.parse(localStorage.getItem('user'));
-    if (userDetails) setUser(userDetails);
-  }, []);
 
   return (
-    <ThemeProvider theme={{}}>
-      <div className='App'>
-        <GlobalStyles />
-        <Router>
-          <Navbar user={user} setUser={setUser} />
-          <Switch>
-            <Route
-              exact
-              path='/login'
-              render={(props) => (
-                <Login user={user} setUser={setUser} {...props} />
-              )}
-            />
-            <Route
-              exact
-              path='/signup'
-              render={(props) => <Signup setUser={setUser} {...props} />}
-            />
-            <Route
-              exact
-              path='/createProfile'
-              render={(props) => <CreateProfile user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/updateProfile'
-              render={(props) => <UpdateProfile user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/profile/:username'
-              render={(props) => <Profile user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/org/:username'
-              render={(props) => <OrgProfile user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/dashboard'
-              render={(props) =>
-                user.role === 'Employee' ? (
-                  <EmployeeDashboard user={user} {...props} />
-                ) : (
-                  <OrgDashboard user={user} {...props} />
-                )
-              }
-            />
-            <Route
-              exact
-              path='/job/applicants/:id'
-              render={(props) => <JobApplicants user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/createJob'
-              render={(props) => <CreateJob user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/updateJob/:id'
-              render={(props) => <UpdateJob user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/'
-              render={(props) => <Jobs user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/job/:id'
-              render={(props) => <Job user={user} {...props} />}
-            />
-            <Route
-              exact
-              path='/recommended'
-              render={(props) => <RecommendedJobs user={user} {...props} />}
-            />
-            <Route exact path='/courses' component={Courses} />
-            <Route component={Error404} />
-          </Switch>
-          <Footer />
-        </Router>
-      </div>
-    </ThemeProvider>
-  );
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/create-profile" element={<CreateProfile />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<SpecificProfile />} />
+        <Route path="/add-job" element={<AddJob />} />
+        <Route path="/org-jobs" element={<OrgJobs />} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/add-ad" element={<AddAdvertisement />} />
+        <Route path="/my-ad" element={<MyAd />} />
+        <Route path="/mentors" element={<Mentors />} />
+        <Route path="/courses" element={<Courses />} />
+      </Routes>
+    </Router>    
+  )
 }
-export default App;
+
+export default App
