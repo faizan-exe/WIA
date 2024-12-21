@@ -11,7 +11,7 @@ function Profile() {
     image: 'https://thumbs.dreamstime.com/b/portrait-nice-young-girl-show-tongue-wear-top-isolated-turquoise-color-background-portrait-nice-young-girl-show-tongue-323915903.jpg',
     preferences: {
       skills: 'JavaScript, React, Node.js',
-      industries: ['Technology', 'Finance'],
+      industries: ['Skincare', 'Healthcare', 'Gaming', 'Furniture'],
       expertise: 'Software Development',
       experience: 5,
       orgName: 'Tech Innovators Inc.',

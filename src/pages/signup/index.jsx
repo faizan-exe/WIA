@@ -43,7 +43,7 @@ function Signup() {
             >
               <option value="">Select your role</option>
               <option value="mentor">Mentor</option>
-              <option value="organization">Organization</option>
+              <option value="organization">Vendor</option>
               <option value="job-seeker">Job Seeker</option>
             </select>
           </div>

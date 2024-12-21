@@ -9,13 +9,13 @@ function CreateProfile() {
     preferences: {},
   });
 //   const predefinedRole = 'job-seeker'
-//   const predefinedRole = 'organization'
-  const predefinedRole = 'mentor'
+  const predefinedRole = 'organization'
+  // const predefinedRole = 'mentor'
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
+  }
 
   const handleFileChange = (e) => {
     setFormData({ ...formData, image: e.target.files[0] });
@@ -97,7 +97,7 @@ function CreateProfile() {
             <div>
               <label className="block text-sm font-medium text-gray-700">Preferred Industries</label>
               <div className="mt-1 space-y-2">
-                {['Technology', 'Healthcare', 'Education', 'Finance'].map((industry) => (
+                {['Skincare', 'Healthcare', 'Gaming', 'Furniture'].map((industry) => (
                   <div key={industry} className="flex items-center">
                     <input
                       type="checkbox"
@@ -139,16 +139,16 @@ function CreateProfile() {
 
         {step === 2 && predefinedRole === 'organization' && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">Organization Details</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Vendor Details</h2>
             <div>
               <label htmlFor="org-name" className="block text-sm font-medium text-gray-700">
-                Organization Name
+                Vendor Name
               </label>
               <input
                 type="text"
                 id="org-name"
                 name="orgName"
-                placeholder="Enter organization name"
+                placeholder="Enter vendor name"
                 value={formData.preferences.orgName || ''}
                 onChange={(e) => setFormData({ ...formData, preferences: { ...formData.preferences, orgName: e.target.value } })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

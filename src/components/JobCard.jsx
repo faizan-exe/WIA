@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function JobCard({ job }) {
+function JobCard({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -13,17 +13,17 @@ function JobCard({ job }) {
     <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
       {/* Main Info */}
       <div className="flex items-center space-x-4">
-        {job.image && (
+        {product.image && (
           <img
-            src={job.image}
-            alt={job.jobName}
+            src={product.image}
+            alt={product.productName}
             className="w-16 h-16 rounded object-cover"
           />
         )}
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">{job.jobName}</h2>
-          <p className="text-gray-600 text-sm" >Organization: {job.organizationName}</p>
-          <p className="text-gray-600 text-sm">Expected Salary: {job.expectedSalary}</p>
+          <h2 className="text-lg font-semibold text-gray-800">{product.productName}</h2>
+          <p className="text-gray-600 text-sm">Organization: {product.organizationName}</p>
+          <p className="text-gray-600 text-sm">Price: {product.price}</p>
         </div>
       </div>
 
@@ -47,7 +47,7 @@ function JobCard({ job }) {
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">Job Details</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Product Details</h3>
               <button
                 onClick={handleModalToggle}
                 className="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -59,48 +59,48 @@ function JobCard({ job }) {
             {/* Modal Content */}
             <div className="space-y-4">
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Job Name</h4>
-                <p className="text-gray-600">{job.jobName}</p>
+                <h4 className="text-lg font-medium text-gray-700">Product Name</h4>
+                <p className="text-gray-600">{product.productName}</p>
               </div>
 
               <div>
                 <h4 className="text-lg font-medium text-gray-700">Organization Name</h4>
-                <p className="text-blue-600 font-bold hover:text-lg transition-all duration-100 ease-out cursor-pointer " onClick={()=>navigate('/profile/sass')}>{job.organizationName}</p>
+                <p
+                  className="text-blue-600 font-bold hover:text-lg transition-all duration-100 ease-out cursor-pointer"
+                  onClick={() => navigate('/profile/sass')}
+                >
+                  {product.organizationName}
+                </p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Job Description</h4>
-                <p className="text-gray-600">{job.jobDescription}</p>
+                <h4 className="text-lg font-medium text-gray-700">Product Description</h4>
+                <p className="text-gray-600">{product.productDescription}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Expected Salary</h4>
-                <p className="text-gray-600">{job.expectedSalary}</p>
+                <h4 className="text-lg font-medium text-gray-700">Price</h4>
+                <p className="text-gray-600">{product.price}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Industry</h4>
-                <p className="text-gray-600">{job.industry}</p>
+                <h4 className="text-lg font-medium text-gray-700">Category</h4>
+                <p className="text-gray-600">{product.category}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Location</h4>
-                <p className="text-gray-600">{job.location}</p>
+                <h4 className="text-lg font-medium text-gray-700">Stock Quantity</h4>
+                <p className="text-gray-600">{product.stockQuantity}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Job Type</h4>
-                <p className="text-gray-600">{job.jobType}</p>
+                <h4 className="text-lg font-medium text-gray-700">SKU</h4>
+                <p className="text-gray-600">{product.sku}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Required Skills</h4>
-                <p className="text-gray-600">{job.skills}</p>
-              </div>
-
-              <div>
-                <h4 className="text-lg font-medium text-gray-700">Experience</h4>
-                <p className="text-gray-600">{job.experience} years</p>
+                <h4 className="text-lg font-medium text-gray-700">Tags</h4>
+                <p className="text-gray-600">{product.tags}</p>
               </div>
             </div>
 
