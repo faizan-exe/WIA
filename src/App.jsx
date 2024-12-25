@@ -16,10 +16,13 @@ import MyAd from "./pages/my-ad";
 import Mentors from "./pages/mentor";
 import Courses from "./pages/courses";
 import SpecificProfile from "./pages/profile/specificProfile";
+import { QueryClient, QueryClientProvider } from 'react-query'
 
+const queryClient = new QueryClient()
 function App() {
 
   return (
+    <QueryClientProvider client={queryClient}>
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -35,8 +38,8 @@ function App() {
         <Route path="/mentors" element={<Mentors />} />
         <Route path="/courses" element={<Courses />} />
       </Routes>
-    </Router>    
-  )
+    </Router>
+    </QueryClientProvider>)
 }
 
 export default App
