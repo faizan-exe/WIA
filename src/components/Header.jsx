@@ -5,7 +5,7 @@ function Header({ userRole }) {
   return (
     <header className="bg-indigo-600 text-white shadow-lg">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 className="text-3xl font-bold tracking-wide">Platform</h1>
+        <h1 className="text-3xl font-bold tracking-wide">Women In Action</h1>
         <nav className="flex space-x-6">
           {/* Links for all users */}
           <Link
@@ -39,7 +39,7 @@ function Header({ userRole }) {
             </>
           )}
 
-          {userRole === 'organization' && (
+          {userRole === 'org' && (
             <>
               <Link
                 to="/org-jobs"

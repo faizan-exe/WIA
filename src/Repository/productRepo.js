@@ -1,9 +1,16 @@
 import axios from "axios";
 
-const API_URL = "https://web-be-180924265462.us-central1.run.app/api/jobs";
+const API_URL = "http://localhost:5001/api/jobs";
 export const createProduct = async (userData) => {
-
-   const response = await axios.post(`${API_URL}`, userData);
+    const token = localStorage.getItem('token');
+    const response = await axios.post(`${API_URL}`, userData,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        }
+    );
     return response.data;
 }
 

@@ -27,6 +27,9 @@ function Login() {
       if (predefinedRole === 'mentor') {
         navigate('/my-ad');
       }
+      if (predefinedRole === 'org') {
+        navigate('/org-jobs');
+      }
     },
     onError: (error) => {
       setError(error?.response?.data?.message || 'An error occurred');

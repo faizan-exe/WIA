@@ -10,6 +10,12 @@ function AddJob() {
     price: '',
     stockQuantity: '',
     category: '',
+    sku: (Math.random() * 90000000 + 10000000).toFixed(0).toString(),
+    tags: '',
+    discount: '',
+    launchDate: '',
+    warrantyInfo: '',
+    image: null,  // Initially no image
   });
 
   const handleInputChange = (e) => {
@@ -21,19 +27,22 @@ function AddJob() {
   };
 
   const handleImageChange = (e) => {
-    console.log('Image:', e.target.files[0]);
-    
+    setProductData((prev) => ({
+      ...prev,
+      image: e.target.files[0],
+    }));
   };
-  const { mutate, isLoading, isError, error, isSuccess,data } = useMutation({
+
+  const { mutate, isLoading, isError, error, isSuccess, data } = useMutation({
     mutationFn: createProduct,
     onSuccess: (data) => {
       console.log('Product added successfully!', data);
-      // You can reset form or redirect as needed here
     },
     onError: (err) => {
-      console.error("error",err);
+      console.error('Error:', err);
     },
   });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const jobData = {
@@ -42,6 +51,12 @@ function AddJob() {
       price: parseFloat(productData.price),
       stockQuantity: parseInt(productData.stockQuantity, 10),
       category: productData.category,
+      sku: productData.sku,
+      tags: productData.tags.split(',').map(tag => tag.trim()),
+      discount: productData.discount ? parseFloat(productData.discount) : undefined,
+      launchDate: productData.launchDate ? new Date(productData.launchDate) : undefined,
+      warrantyInfo: productData.warrantyInfo,
+      image: productData.image ? productData.image.name : undefined, // Handle image file name
     };
 
     // Call the mutate function from React Query to trigger the API request
@@ -50,12 +65,12 @@ function AddJob() {
 
   return (
     <>
-      <Header userRole={'organization'} />
+      <Header userRole={'org'} />
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
         <div className="w-full max-w-3xl p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Add New Product</h1>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Job Image */}
+            {/* Product Image */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Product Image</label>
               <input
@@ -66,7 +81,7 @@ function AddJob() {
               />
               {productData.image && (
                 <img
-                  src={productData.image}
+                  src={URL.createObjectURL(productData.image)}
                   alt="Job Preview"
                   className="mt-4 w-32 h-32 object-cover rounded"
                 />
@@ -101,21 +116,21 @@ function AddJob() {
               ></textarea>
             </div>
 
-            {/* Industry */}
+            {/* Category */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Category</label>
               <div className="mt-2 space-y-2">
-                {['Skincare', 'Healthcare', 'Gaming', 'Furniture'].map((industry) => (
-                  <label key={industry} className="flex items-center space-x-2">
+                {['Skincare', 'Healthcare', 'Gaming', 'Furniture'].map((category) => (
+                  <label key={category} className="flex items-center space-x-2">
                     <input
                       type="radio"
                       name="category"
-                      value={industry}
-                      checked={productData.category === industry}
+                      value={category}
+                      checked={productData.category === category}
                       onChange={handleInputChange}
                       className="focus:ring-indigo-500 focus:border-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                     />
-                    <span className="text-gray-700">{industry}</span>
+                    <span className="text-gray-700">{category}</span>
                   </label>
                 ))}
               </div>
@@ -149,8 +164,6 @@ function AddJob() {
               />
             </div>
 
-            
-
             {/* SKU */}
             <div>
               <label className="block text-sm font-medium text-gray-700">SKU</label>
@@ -158,7 +171,6 @@ function AddJob() {
                 type="text"
                 name="sku"
                 value={productData.sku}
-                onChange={handleInputChange}
                 className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="Enter SKU"
               />
@@ -221,9 +233,10 @@ function AddJob() {
                 type="submit"
                 className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Add Product
+                {isLoading ? <span className='loader' /> : 'Add Job'}
               </button>
             </div>
+            {isError && <p className="text-red-600">{"Something went wrong !"}</p>}
           </form>
         </div>
       </div>
