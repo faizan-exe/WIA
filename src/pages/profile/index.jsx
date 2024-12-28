@@ -6,23 +6,11 @@ function Profile() {
 
   // Sample data to simulate form submission
   const [userProfile, setUserProfile] = useState({
-    address: '123 Main St, Cityville, Country',
-    qualification: 'Bachelor in Computer Science',
-    image: 'https://thumbs.dreamstime.com/b/portrait-nice-young-girl-show-tongue-wear-top-isolated-turquoise-color-background-portrait-nice-young-girl-show-tongue-323915903.jpg',
-    preferences: {
-      skills: 'JavaScript, React, Node.js',
-      industries: ['Skincare', 'Healthcare', 'Gaming', 'Furniture'],
-      expertise: 'Software Development',
-      experience: 5,
-      orgName: 'Tech Innovators Inc.',
-      focus: 'Software development and AI research',
-    },
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    password: 'password123',
+    role: 'mentor', // Possible values: 'woman', 'mentor', 'org'
   });
-
-  // For testing purposes, we'll assume the role is 'job-seeker'
-  // const predefinedRole = 'job-seeker';
-  // const predefinedRole = 'organization';
-  const predefinedRole = 'mentor';
 
   // Handle input changes in the modal
   const handleInputChange = (e) => {
@@ -33,59 +21,25 @@ function Profile() {
     }));
   };
 
-  const handlePreferencesChange = (e) => {
-    const { name, value } = e.target;
-    setUserProfile((prev) => ({
-      ...prev,
-      preferences: {
-        ...prev.preferences,
-        [name]: value,
-      },
-    }));
-  };
-
   return (
     <>
-      <Header userRole={predefinedRole} />
+      <Header userRole={userProfile.role} />
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
         <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-md space-y-6">
           <h1 className="text-2xl font-bold text-center text-gray-900">Profile</h1>
 
           <div className="space-y-4">
             <div className="text-center">
-              <img
-                src={userProfile.image}
-                alt="Profile"
-                className="w-32 h-32 rounded-full mx-auto object-cover"
-              />
               <h2 className="text-xl font-semibold text-gray-800 mt-4">Personal Information</h2>
-              <p className="text-gray-600">Address: {userProfile.address}</p>
-              <p className="text-gray-600">Qualification: {userProfile.qualification}</p>
+              <img
+                src="https://picsum.photos/200"
+                alt="Profile Avatar"
+                className="w-32 h-32 rounded-full mx-auto object-cover mt-2 mb-2"
+              />
+              <p className="text-gray-600">Name: {userProfile.name}</p>
+              <p className="text-gray-600">Email: {userProfile.email}</p>
+              <p className="text-gray-600">Role: {userProfile.role}</p>
             </div>
-
-            {predefinedRole === 'job-seeker' && (
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">Job Seeker Preferences</h2>
-                <p className="text-gray-600">Preferred Industries: {userProfile.preferences.industries.join(', ')}</p>
-                <p className="text-gray-600">Skills: {userProfile.preferences.skills}</p>
-              </div>
-            )}
-
-            {predefinedRole === 'organization' && (
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">Organization Details</h2>
-                <p className="text-gray-600">Organization Name: {userProfile.preferences.orgName}</p>
-                <p className="text-gray-600">Areas of Focus: {userProfile.preferences.focus}</p>
-              </div>
-            )}
-
-            {predefinedRole === 'mentor' && (
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">Mentor Details</h2>
-                <p className="text-gray-600">Area of Expertise: {userProfile.preferences.expertise}</p>
-                <p className="text-gray-600">Years of Experience: {userProfile.preferences.experience}</p>
-              </div>
-            )}
 
             <button
               onClick={() => setIsModalOpen(true)}
@@ -105,92 +59,51 @@ function Profile() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Address</label>
+                <label className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
-                  name="address"
-                  value={userProfile.address}
+                  name="name"
+                  value={userProfile.name}
                   onChange={handleInputChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Qualification</label>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
                 <input
-                  type="text"
-                  name="qualification"
-                  value={userProfile.qualification}
+                  type="email"
+                  name="email"
+                  value={userProfile.email}
                   onChange={handleInputChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
 
-              {predefinedRole === 'job-seeker' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Preferred Industries</label>
-                  <input
-                    type="text"
-                    name="industries"
-                    value={userProfile.preferences.industries.join(', ')}
-                    onChange={(e) =>
-                      handlePreferencesChange({
-                        target: { name: 'industries', value: e.target.value.split(', ') },
-                      })
-                    }
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <label className="block text-sm font-medium text-gray-700 mt-2">Skills</label>
-                  <input
-                    type="text"
-                    name="skills"
-                    value={userProfile.preferences.skills}
-                    onChange={handlePreferencesChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={userProfile.password}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
 
-              {predefinedRole === 'organization' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Organization Name</label>
-                  <input
-                    type="text"
-                    name="orgName"
-                    value={userProfile.preferences.orgName}
-                    onChange={handlePreferencesChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <label className="block text-sm font-medium text-gray-700 mt-2">Focus</label>
-                  <textarea
-                    name="focus"
-                    value={userProfile.preferences.focus}
-                    onChange={handlePreferencesChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  ></textarea>
-                </div>
-              )}
-
-              {predefinedRole === 'mentor' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Expertise</label>
-                  <input
-                    type="text"
-                    name="expertise"
-                    value={userProfile.preferences.expertise}
-                    onChange={handlePreferencesChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <label className="block text-sm font-medium text-gray-700 mt-2">Experience</label>
-                  <input
-                    type="number"
-                    name="experience"
-                    value={userProfile.preferences.experience}
-                    onChange={handlePreferencesChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Role</label>
+                <select
+                  name="role"
+                  value={userProfile.role}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <option value="woman">Woman</option>
+                  <option value="mentor">Mentor</option>
+                  <option value="org">Organization</option>
+                </select>
+              </div>
             </div>
 
             <div className="mt-6 flex justify-end space-x-4">
