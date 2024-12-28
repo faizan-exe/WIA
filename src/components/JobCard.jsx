@@ -21,8 +21,7 @@ function JobCard({ product }) {
           />
         )}
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">{product.productName}</h2>
-          <p className="text-gray-600 text-sm">Organization: {product.organizationName}</p>
+          <h2 className="text-lg font-semibold text-gray-800">{product.title}</h2>
           <p className="text-gray-600 text-sm">Price: {product.price}</p>
         </div>
       </div>
@@ -60,22 +59,12 @@ function JobCard({ product }) {
             <div className="space-y-4">
               <div>
                 <h4 className="text-lg font-medium text-gray-700">Product Name</h4>
-                <p className="text-gray-600">{product.productName}</p>
-              </div>
-
-              <div>
-                <h4 className="text-lg font-medium text-gray-700">Organization Name</h4>
-                <p
-                  className="text-blue-600 font-bold hover:text-lg transition-all duration-100 ease-out cursor-pointer"
-                  onClick={() => navigate('/profile/sass')}
-                >
-                  {product.organizationName}
-                </p>
+                <p className="text-gray-600">{product.title}</p>
               </div>
 
               <div>
                 <h4 className="text-lg font-medium text-gray-700">Product Description</h4>
-                <p className="text-gray-600">{product.productDescription}</p>
+                <p className="text-gray-600">{product.description}</p>
               </div>
 
               <div>
@@ -100,7 +89,13 @@ function JobCard({ product }) {
 
               <div>
                 <h4 className="text-lg font-medium text-gray-700">Tags</h4>
-                <p className="text-gray-600">{product.tags}</p>
+                <p className="text-gray-600">{
+                  product.tags.map((tag) => (
+                    <span key={tag} className="mr-2 inline-block bg-gray-200 rounded-full px-2 py-1 text-sm mb-2">
+                      {tag}
+                    </span>
+                  ))
+                  }</p>
               </div>
             </div>
 

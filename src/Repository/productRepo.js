@@ -15,6 +15,12 @@ export const createProduct = async (userData) => {
 }
 
 export const getProducts = async () => {
-    const response = await axios.get(`${API_URL}/`);
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${API_URL}/`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,   
+        }
+    });
     return response.data;
 }

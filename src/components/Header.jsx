@@ -45,13 +45,13 @@ function Header({ userRole }) {
                 to="/org-jobs"
                 className="px-4 py-2 rounded-lg bg-indigo-700 hover:bg-indigo-800 transition"
               >
-                Job Posts
+                Listed Products
               </Link>
               <Link
                 to="/add-job"
                 className="px-4 py-2 rounded-lg bg-indigo-700 hover:bg-indigo-800 transition"
               >
-                Add Job
+                Add Product
               </Link>
             </>
           )}
