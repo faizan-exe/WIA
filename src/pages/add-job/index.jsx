@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
+import { useMutation } from '@tanstack/react-query';
+import { createProduct } from '../../Repository/productRepo';
 
 function AddJob() {
   const [productData, setProductData] = useState({
@@ -8,12 +10,6 @@ function AddJob() {
     price: '',
     stockQuantity: '',
     category: '',
-    sku: '',
-    tags: '',
-    discount: '',
-    launchDate: '',
-    warrantyInfo: '',
-    image: '',
   });
 
   const handleInputChange = (e) => {
@@ -25,24 +21,31 @@ function AddJob() {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProductData((prev) => ({
-          ...prev,
-          image: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
+    console.log('Image:', e.target.files[0]);
+    
   };
-
+  const { mutate, isLoading, isError, error, isSuccess,data } = useMutation({
+    mutationFn: createProduct,
+    onSuccess: (data) => {
+      console.log('Product added successfully!', data);
+      // You can reset form or redirect as needed here
+    },
+    onError: (err) => {
+      console.error("error",err);
+    },
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Job Data Submitted:', productData);
-    // Add logic to send productData to backend or API
-    alert('Job added successfully!');
+    const jobData = {
+      title: productData.jobName,
+      description: productData.jobDescription,
+      price: parseFloat(productData.price),
+      stockQuantity: parseInt(productData.stockQuantity, 10),
+      category: productData.category,
+    };
+
+    // Call the mutate function from React Query to trigger the API request
+    mutate(jobData);
   };
 
   return (
@@ -108,7 +111,7 @@ function AddJob() {
                       type="radio"
                       name="category"
                       value={industry}
-                      checked={productData.industry === industry}
+                      checked={productData.category === industry}
                       onChange={handleInputChange}
                       className="focus:ring-indigo-500 focus:border-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                     />
