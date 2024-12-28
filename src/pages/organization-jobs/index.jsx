@@ -1,34 +1,14 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
-import JobCard from '../../components/JobCard'
+import JobCard from '../../components/JobCard';
+import { getProducts } from '../../Repository/productRepo';
+import { useQuery } from '@tanstack/react-query';
 
 function OrgJobs() {
-  const [productPosts, setProductPosts] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Skincare Lotion',
-      productDescription: 'A nourishing lotion for healthy and radiant skin.',
-      price: '$25',
-      category: 'Skincare',
-      stockQuantity: 50,
-      sku: 'SKN12345',
-      tags: 'hydration, skincare',
-      organizationName: 'Beauty Essentials Co.',
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Wireless Headphones',
-      productDescription: 'High-quality wireless headphones with noise cancellation.',
-      price: '$150',
-      category: 'Electronics',
-      stockQuantity: 200,
-      sku: 'ELEC98765',
-      tags: 'audio, wireless',
-      organizationName: 'TechWave Inc.',
-    },
-  ]);
+  const { data: productPosts, error, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ['orgJobPosts'],
+    queryFn: getProducts,
+  });
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -49,13 +29,13 @@ function OrgJobs() {
   };
 
   const handleSaveChanges = () => {
-    setProductPosts((prev) =>
-      prev.map((product) =>
-        product.id === currentProduct.id ? { ...currentProduct } : product
-      )
-    );
+    // Save logic (e.g., API update call) should go here
     handleModalClose();
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -64,11 +44,8 @@ function OrgJobs() {
         <h1 className="text-3xl font-bold text-gray-800">Product Listings</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productPosts.map((product) => (
-            <div key={product.id} className="relative">
-              {/* ProductCard Component */}
+            <div key={product._id} className="relative">
               <JobCard product={product} />
-
-              {/* Buttons Container */}
               <div className="bg-white p-2 flex justify-around space-x-2 rounded-lg shadow-md mt-0">
                 <button
                   onClick={() => handleEditClick(product)}
@@ -85,7 +62,6 @@ function OrgJobs() {
         </div>
       </div>
 
-      {/* Edit Modal */}
       {isEditModalOpen && currentProduct && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -100,21 +76,21 @@ function OrgJobs() {
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block font-medium text-gray-700">Product Name</label>
+                <label className="block font-medium text-gray-700">Title</label>
                 <input
                   type="text"
-                  name="productName"
-                  value={currentProduct.productName}
+                  name="title"
+                  value={currentProduct.title}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-gray-700">Product Description</label>
+                <label className="block font-medium text-gray-700">Description</label>
                 <textarea
-                  name="productDescription"
-                  value={currentProduct.productDescription}
+                  name="description"
+                  value={currentProduct.description}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                 ></textarea>
@@ -123,7 +99,7 @@ function OrgJobs() {
               <div>
                 <label className="block font-medium text-gray-700">Price</label>
                 <input
-                  type="text"
+                  type="number"
                   name="price"
                   value={currentProduct.price}
                   onChange={handleInputChange}
@@ -169,7 +145,44 @@ function OrgJobs() {
                 <input
                   type="text"
                   name="tags"
-                  value={currentProduct.tags}
+                  value={currentProduct.tags ? currentProduct.tags.join(', ') : ''}
+                  onChange={(e) =>
+                    handleInputChange({
+                      target: { name: 'tags', value: e.target.value.split(', ') },
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-gray-700">Discount</label>
+                <input
+                  type="number"
+                  name="discount"
+                  value={currentProduct.discount}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-gray-700">Launch Date</label>
+                <input
+                  type="date"
+                  name="launchDate"
+                  value={currentProduct.launchDate.split('T')[0]}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-gray-700">Warranty Info</label>
+                <input
+                  type="text"
+                  name="warrantyInfo"
+                  value={currentProduct.warrantyInfo}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
