@@ -1,27 +1,43 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../authService';
+import { loginUser } from '../../Repository/authRepo';
+import { useMutation } from '@tanstack/react-query';
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
+  const predefinedRole = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : '';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    console.log("Login clicked with data:", email, password);
-    const userData = { email, password };
-    try {
-      const signUp = await loginUser(userData);
-      console.log("signUp", signUp);
-      navigate('/dashboard');
-    }
-    catch (error) {
-      setError(error.response.data.message);
-      return;
-    }
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      console.log('Login successful:', data);
 
+      // Decode the token
+      const decodedToken = jwtDecode(data.token); 
+      console.log('Decoded Token:', decodedToken);
+
+      // Save token and decoded data to local storage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(decodedToken));
+
+     if (predefinedRole === 'mentor') {
+      navigate('/my-ad');}
+    },
+    onError: (error) => {
+      setError(error?.response?.data?.message || 'An error occurred');
+    },
+  });
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const userData = { email, password };
+    
+    // Trigger the mutation
+    mutation.mutate(userData);
   };
 
   return (
@@ -61,12 +77,13 @@ function Login() {
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={mutation.isPending}  
           >
-            Login
+            {mutation.isPending ?  <span className='loader'/>: 'Login'}
           </button>
         </form>
         <p className="text-sm text-center text-gray-600">
-          Dont have an account?{' '}
+          Don’t have an account?{' '}
           <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
             Sign up
           </Link>

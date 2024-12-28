@@ -16,7 +16,7 @@ function Header({ userRole }) {
           </Link>
 
           {/* Conditional Links based on userRole */}
-          {userRole === 'job-seeker' && (
+          {userRole === 'woman' && (
             <>
               <Link
                 to="/jobs"
@@ -75,7 +75,11 @@ function Header({ userRole }) {
 
           {/* Logout Link */}
           <Link
-            to="/logout"
+           onClick={() => {
+             localStorage.removeItem('token');
+             localStorage.removeItem('user');
+             window.location.href = '/';
+           }}
             className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 transition"
           >
             Logout

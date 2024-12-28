@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function CreateProfile() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     address: '',
@@ -8,14 +10,13 @@ function CreateProfile() {
     image: null,
     preferences: {},
   });
-//   const predefinedRole = 'job-seeker'
-  const predefinedRole = 'organization'
-  // const predefinedRole = 'mentor'
 
-  function handleChange(e) {
+  const predefinedRole = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : '';
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  }
+  };
 
   const handleFileChange = (e) => {
     setFormData({ ...formData, image: e.target.files[0] });
@@ -34,17 +35,52 @@ function CreateProfile() {
 
   const handleNextStep = () => setStep(step + 1);
 
+  const handleSubmit = async () => {
+    const data = new FormData();
+    data.append('address', formData.address);
+    data.append('qualification', formData.qualification);
+    data.append('image', formData.image);
+    data.append('preferences', JSON.stringify(formData.preferences)); // Add preferences to FormData if needed
+
+    try {
+      const response = await fetch('your-api-endpoint', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (response.ok) {
+        // Handle success (e.g., show a success message or redirect)
+        console.log('Profile created successfully');
+        if (predefinedRole === 'organization') {
+          // Redirect to organization jobs page
+          navigate('/org-jobs');
+        }
+        else if (predefinedRole === 'mentor') {
+          // Redirect to mentor page
+          navigate('/mentors');
+        }
+        else {
+          // Redirect to jobs page
+          navigate('/jobs');}
+      } else {
+        // Handle failure (e.g., show an error message)
+        console.error('Error creating profile');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-md space-y-6">
-        <h1 className="text-2xl font-bold text-center text-gray-900">Create Your Profile</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-900">{step==3?"Submit Profile":"Create Your Profile"}</h1>
 
         {step === 1 && (
           <div className="space-y-4">
+            {/* Step 1 Form Fields */}
             <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                Address
-              </label>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
               <input
                 type="text"
                 id="address"
@@ -56,9 +92,7 @@ function CreateProfile() {
               />
             </div>
             <div>
-              <label htmlFor="qualification" className="block text-sm font-medium text-gray-700">
-                Qualification
-              </label>
+              <label htmlFor="qualification" className="block text-sm font-medium text-gray-700">Qualification</label>
               <input
                 type="text"
                 id="qualification"
@@ -70,9 +104,7 @@ function CreateProfile() {
               />
             </div>
             <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-                Profile Image
-              </label>
+              <label htmlFor="image" className="block text-sm font-medium text-gray-700">Profile Image</label>
               <input
                 type="file"
                 id="image"
@@ -91,9 +123,10 @@ function CreateProfile() {
           </div>
         )}
 
-        {step === 2 && predefinedRole === 'job-seeker' && (
+        {step === 2 && predefinedRole === 'woman' && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">Job Seeker Preferences</h2>
+            {/* Preferences for woman role */}
+            <h2 className="text-xl font-semibold text-gray-800">Entrepreneur Preferences</h2>
             <div>
               <label className="block text-sm font-medium text-gray-700">Preferred Industries</label>
               <div className="mt-1 space-y-2">
@@ -106,17 +139,13 @@ function CreateProfile() {
                       onChange={handlePreferenceChange}
                       className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                     />
-                    <label htmlFor={industry} className="ml-2 text-sm text-gray-700">
-                      {industry}
-                    </label>
+                    <label htmlFor={industry} className="ml-2 text-sm text-gray-700">{industry}</label>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <label htmlFor="skills" className="block text-sm font-medium text-gray-700">
-                Key Skills
-              </label>
+              <label htmlFor="skills" className="block text-sm font-medium text-gray-700">Key Skills</label>
               <input
                 type="text"
                 id="skills"
@@ -139,11 +168,10 @@ function CreateProfile() {
 
         {step === 2 && predefinedRole === 'organization' && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">Vendor Details</h2>
+            {/* Preferences for organization role */}
+            <h2 className="text-xl font-semibold text-gray-800">Organization Details</h2>
             <div>
-              <label htmlFor="org-name" className="block text-sm font-medium text-gray-700">
-                Vendor Name
-              </label>
+              <label htmlFor="org-name" className="block text-sm font-medium text-gray-700">Organization Name</label>
               <input
                 type="text"
                 id="org-name"
@@ -155,9 +183,7 @@ function CreateProfile() {
               />
             </div>
             <div>
-              <label htmlFor="focus" className="block text-sm font-medium text-gray-700">
-                Areas of Focus
-              </label>
+              <label htmlFor="focus" className="block text-sm font-medium text-gray-700">Areas of Focus</label>
               <textarea
                 id="focus"
                 name="focus"
@@ -179,11 +205,10 @@ function CreateProfile() {
 
         {step === 2 && predefinedRole === 'mentor' && (
           <div className="space-y-4">
+            {/* Preferences for mentor role */}
             <h2 className="text-xl font-semibold text-gray-800">Mentor Details</h2>
             <div>
-              <label htmlFor="expertise" className="block text-sm font-medium text-gray-700">
-                Area of Expertise
-              </label>
+              <label htmlFor="expertise" className="block text-sm font-medium text-gray-700">Area of Expertise</label>
               <input
                 type="text"
                 id="expertise"
@@ -195,9 +220,7 @@ function CreateProfile() {
               />
             </div>
             <div>
-              <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
-                Years of Experience
-              </label>
+              <label htmlFor="experience" className="block text-sm font-medium text-gray-700">Years of Experience</label>
               <input
                 type="number"
                 id="experience"
@@ -219,9 +242,15 @@ function CreateProfile() {
         )}
 
         {step === 3 && (
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-800">Profile Complete!</h2>
-            <p className="text-gray-600">Thank you for completing your profile.</p>
+          <div>
+            {/* Submit Button */}
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Submit
+            </button>
           </div>
         )}
       </div>
