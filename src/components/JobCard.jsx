@@ -9,6 +9,9 @@ function JobCard({ product }) {
     setIsModalOpen(!isModalOpen);
   };
 
+  console.log(product);
+  
+
   return (
     <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
       {/* Main Info */}

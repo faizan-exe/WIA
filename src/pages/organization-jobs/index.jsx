@@ -102,8 +102,8 @@ function OrgJobs() {
                 <label className="block font-medium text-gray-700">Product Name</label>
                 <input
                   type="text"
-                  name="productName"
-                  value={currentProduct.productName}
+                  name="title"
+                  value={currentProduct.title}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
@@ -112,8 +112,8 @@ function OrgJobs() {
               <div>
                 <label className="block font-medium text-gray-700">Product Description</label>
                 <textarea
-                  name="productDescription"
-                  value={currentProduct.productDescription}
+                  name="description"
+                  value={currentProduct.description}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                 ></textarea>
