@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
-import JobCard from '../../components/JobCard'
+import JobCard from '../../components/JobCard';
+import axios from 'axios';
 
 function OrgJobs() {
-  const [productPosts, setProductPosts] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Skincare Lotion',
-      productDescription: 'A nourishing lotion for healthy and radiant skin.',
-      price: '$25',
-      category: 'Skincare',
-      stockQuantity: 50,
-      sku: 'SKN12345',
-      tags: 'hydration, skincare',
-      organizationName: 'Beauty Essentials Co.',
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Wireless Headphones',
-      productDescription: 'High-quality wireless headphones with noise cancellation.',
-      price: '$150',
-      category: 'Electronics',
-      stockQuantity: 200,
-      sku: 'ELEC98765',
-      tags: 'audio, wireless',
-      organizationName: 'TechWave Inc.',
-    },
-  ]);
-
+  const [productPosts, setProductPosts] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+
+  // Fetch jobs on component mount
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        // Get the token from localStorage
+        const token = localStorage.getItem('token');
+        
+        // If token exists, set it in the headers of the request
+        const response = await axios.get('http://localhost:5001/api/jobs/my-jobs', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Update state with fetched product posts
+        setProductPosts(response.data);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+
+    fetchJobs();
+  }, []); // Empty dependency array ensures it runs only once after the initial render
 
   const handleEditClick = (product) => {
     setCurrentProduct(product);
@@ -51,7 +50,7 @@ function OrgJobs() {
   const handleSaveChanges = () => {
     setProductPosts((prev) =>
       prev.map((product) =>
-        product.id === currentProduct.id ? { ...currentProduct } : product
+        product._id === currentProduct._id ? { ...currentProduct } : product
       )
     );
     handleModalClose();
@@ -64,7 +63,7 @@ function OrgJobs() {
         <h1 className="text-3xl font-bold text-gray-800">Product Listings</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productPosts.map((product) => (
-            <div key={product.id} className="relative">
+            <div key={product._id} className="relative">
               {/* ProductCard Component */}
               <JobCard product={product} />
 

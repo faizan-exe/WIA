@@ -1,118 +1,123 @@
-import React, { useState, useEffect } from 'react';
-import AdvertisementCard from '../../components/AdCard';
-import Header from '../../components/Header';
-import { useQuery } from '@tanstack/react-query';
-import { getMentorAds } from '../../Repository/mentorRepo';
+import React, { useState, useEffect } from "react";
+import AdvertisementCard from "../../components/AdCard";
+import Header from "../../components/Header";
+import { useQuery } from "@tanstack/react-query";
+import { getMentorAds } from "../../Repository/mentorRepo";
 
 function MyAd() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentAd, setCurrentAd] = useState(null);
   const [formData, setFormData] = useState({
-    mentorName: '',
-    services: '',
-    description: '',
-    contactEmail: '',
-    contactPhone: '',
-    image: null,  // Update image to store a file
+    mentorName: "",
+    services: "",
+    description: "",
+    contactEmail: "",
+    contactPhone: "",
+    image: null, // Update image to store a file
     experience: 0,
-    location: '',
-    availableSlots: '',
-    priceRange: '',
+    location: "",
+    availableSlots: "",
+    priceRange: "",
   });
 
-  const { data: ads, error, isLoading, isError, isSuccess } = useQuery({
-    // Query key for caching
-    queryKey: ['mentorAds'],
-    // Query function to fetch data
+  const {
+    data: ads,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["mentorAds"],
     queryFn: getMentorAds,
+    retry: false, // Disable automatic retries
   });
 
-  const sampleAdvertisements = [
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    {
-      mentorName: 'John Doe',
-      services: 'Career Coaching, Resume Building',
-      description: 'Helping professionals advance their careers with personalized guidance.',
-      contactEmail: 'johndoe@example.com',
-      contactPhone: '123-456-7890',
-      image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-      experience: 5,
-      location: 'Remote',
-      availableSlots: 'Weekends, Evenings',
-      priceRange: '$50 - $100 per session',
-    },
-    // More sample advertisements...
-  ];
+  // const sampleAdvertisements = [
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   {
+  //     mentorName: 'John Doe',
+  //     services: 'Career Coaching, Resume Building',
+  //     description: 'Helping professionals advance their careers with personalized guidance.',
+  //     contactEmail: 'johndoe@example.com',
+  //     contactPhone: '123-456-7890',
+  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
+  //     experience: 5,
+  //     location: 'Remote',
+  //     availableSlots: 'Weekends, Evenings',
+  //     priceRange: '$50 - $100 per session',
+  //   },
+  //   // More sample advertisements...
+  // ];
 
   const handleEdit = (advertisement) => {
     setCurrentAd(advertisement);
     setFormData({
       ...advertisement,
       image: null, // Reset the image when editing
-    }); 
+    });
     setIsModalOpen(true);
   };
 
   const handleDelete = (advertisement) => {
-    console.log('Deleting Advertisement:', advertisement);
+    console.log("Deleting Advertisement:", advertisement);
     // Logic to delete the advertisement
   };
 
@@ -135,60 +140,67 @@ function MyAd() {
 
   const handleSaveChanges = () => {
     // Logic to save changes to the advertisement
-    console.log('Updated Advertisement:', formData);
+    console.log("Updated Advertisement:", formData);
     setIsModalOpen(false);
   };
 
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (isModalOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = 'auto'; // Reset overflow when component unmounts
+      document.body.style.overflow = "auto"; // Reset overflow when component unmounts
     };
   }, [isModalOpen]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;  // You can show a loading spinner or text
-  }
-  
-  if (isError) {
-    return <div>Error: {error.message}</div>;  // Show error message
-  }
-  
-  if (isSuccess && ads) {
-    console.log('Data fetched successfully:', ads);
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;  // You can show a loading spinner or text
+  // }
+
+  // if (isError) {
+  //   return <div>Error: {error.message}</div>;  // Show error message
+  // }
+
+  // if (isSuccess && ads) {
+  //   console.log("Data fetched successfully:", ads);
+  // }
 
   return (
     <>
-      <Header userRole={'mentor'} />
+      <Header userRole={"mentor"} />
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 space-y-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Mentor Advertisements</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Mentor Advertisements
+        </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ads.map((advertisement, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <AdvertisementCard advertisement={advertisement} />
-              <div className="flex space-x-4 mt-4">
-                <button
-                  onClick={() => handleEdit(advertisement)}
-                  className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(advertisement)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none"
-                >
-                  Delete
-                </button>
+          {ads?.length > 0 &&
+            ads.map((advertisement, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <AdvertisementCard advertisement={advertisement} />
+                <div className="flex space-x-4 mt-4">
+                  <button
+                    onClick={() => handleEdit(advertisement)}
+                    className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(advertisement)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+
         </div>
+            {
+              ads?.length === 0 && <p className="mx-auto ">No advertisements added yet.</p>
+            }
       </div>
 
       {/* Modal for Edit */}
@@ -196,7 +208,9 @@ function MyAd() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg overflow-hidden">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Edit Advertisement</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Edit Advertisement
+              </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-600 hover:text-gray-800 focus:outline-none"
@@ -246,7 +260,7 @@ function MyAd() {
                 className="w-full p-2 border rounded-md"
                 placeholder="Contact Phone"
               />
-              
+
               {/* Image File Input */}
               <input
                 type="file"
@@ -258,9 +272,9 @@ function MyAd() {
               {formData.image && (
                 <div className="mt-4">
                   <p>Image Preview:</p>
-                  <img 
-                    src={URL.createObjectURL(formData.image)} 
-                    alt="Preview" 
+                  <img
+                    src={URL.createObjectURL(formData.image)}
+                    alt="Preview"
                     className="mt-2 w-32 h-32 object-cover rounded-md"
                   />
                 </div>

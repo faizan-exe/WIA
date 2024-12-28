@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import Header from '../../components/Header';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { createMentorAd } from '../../Repository/mentorRepo';
+import React, { useState } from "react";
+import Header from "../../components/Header";
+import { useMutation } from "@tanstack/react-query";
+import { createMentorAd } from "../../Repository/mentorRepo";
+import axios from 'axios'; 
 
 function AddAdvertisement() {
   const [advertisement, setAdvertisement] = useState({
-    mentorName: '',
-    services: '',
-    description: '',
-    contactEmail: '',
-    contactPhone: '',
-    experience: '',
-    location: '',
-    availableSlots: '',
-    priceRange: '',
+    mentorName: "",
+    services: "",
+    description: "",
+    contactEmail: "",
+    contactPhone: "",
+    experience: "",
+    location: "",
+    availableSlots: "",
+    priceRange: "",
+    image: null,
   });
 
   const handleInputChange = (e) => {
@@ -22,47 +23,120 @@ function AddAdvertisement() {
     setAdvertisement((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setAdvertisement((prev) => ({ ...prev, image: file }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Using the mutation to submit the form data
-    mutation.mutate(advertisement);
+    const {
+      mentorName,
+      services,
+      description,
+      contactEmail,
+      contactPhone,
+      experience,
+      location,
+      availableSlots,
+      priceRange,
+      image,
+    } = advertisement;
 
-    // Reset form
-    setAdvertisement({
-      mentorName: '',
-      services: '',
-      description: '',
-      contactEmail: '',
-      contactPhone: '',
-      experience: '',
-      location: '',
-      availableSlots: '',
-      priceRange: '',
-    });
+    // Check if all required fields are filled
+    if (
+      !mentorName ||
+      !services ||
+      !description ||
+      !contactEmail ||
+      !contactPhone ||
+      !experience ||
+      !location ||
+      !availableSlots ||
+      !priceRange ||
+      !image
+    ) {
+      alert("Please fill in all fields before submitting the form.");
+      return;
+    }
+
+    // Upload the image to ImgBB
+    try {
+      const imageData = new FormData();
+      imageData.append("image", image);
+
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=5789a9111a607fd180aa3981f47e7c36`, // Replace with your ImgBB API Key
+        imageData
+      );
+
+      if (response.data && response.data.data) {
+        const imageUrl = response.data.data.url;
+
+        // Proceed to create the ad with the image URL
+        const adData = {
+          mentorName,
+          services,
+          description,
+          contactEmail,
+          contactPhone,
+          experience,
+          location,
+          availableSlots,
+          priceRange,
+          image: imageUrl, // Use the URL returned from ImgBB
+        };
+
+        // Send adData to your backend to save the ad
+        mutation.mutate(adData);
+
+        // Reset form after submission
+        setAdvertisement({
+          mentorName: "",
+          services: "",
+          description: "",
+          contactEmail: "",
+          contactPhone: "",
+          experience: "",
+          location: "",
+          availableSlots: "",
+          priceRange: "",
+          image: null,
+        });
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
-    const mutation = useMutation({
-      mutationFn:createMentorAd,
-      onSuccess: (data) => {
-        console.log('Advertisement added successfully!', data);
-      },
-      onError: (error) => {
-        setError(error?.response?.data?.message || 'An error occurred');
-      },
-    });
+
+  const mutation = useMutation({
+    mutationFn: createMentorAd,
+    onSuccess: (data) => {
+      console.log("Advertisement added successfully!", data);
+    },
+    onError: (error) => {
+      console.error("Error adding advertisement:", error);
+    },
+  });
 
   return (
     <>
-      <Header userRole={'mentor'} />
+      <Header userRole={"mentor"} />
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Advertisement</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Add Advertisement
+        </h1>
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl space-y-4"
+          encType="multipart/form-data"
         >
           <div>
-            <label className="block font-medium text-gray-700">Mentor Name</label>
+            <label className="block font-medium text-gray-700">
+              Mentor Name
+            </label>
             <input
               type="text"
               name="mentorName"
@@ -75,7 +149,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Services Offered</label>
+            <label className="block font-medium text-gray-700">
+              Services Offered
+            </label>
             <input
               type="text"
               name="services"
@@ -88,7 +164,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Description</label>
+            <label className="block font-medium text-gray-700">
+              Description
+            </label>
             <textarea
               name="description"
               value={advertisement.description}
@@ -100,7 +178,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Contact Email</label>
+            <label className="block font-medium text-gray-700">
+              Contact Email
+            </label>
             <input
               type="email"
               name="contactEmail"
@@ -113,7 +193,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Contact Phone</label>
+            <label className="block font-medium text-gray-700">
+              Contact Phone
+            </label>
             <input
               type="text"
               name="contactPhone"
@@ -126,7 +208,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Experience (Years)</label>
+            <label className="block font-medium text-gray-700">
+              Experience (Years)
+            </label>
             <input
               type="number"
               name="experience"
@@ -152,7 +236,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Available Slots</label>
+            <label className="block font-medium text-gray-700">
+              Available Slots
+            </label>
             <input
               type="text"
               name="availableSlots"
@@ -165,7 +251,9 @@ function AddAdvertisement() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">Price Range</label>
+            <label className="block font-medium text-gray-700">
+              Price Range
+            </label>
             <input
               type="text"
               name="priceRange"
@@ -177,20 +265,32 @@ function AddAdvertisement() {
             />
           </div>
 
+          <div>
+            <label className="block font-medium text-gray-700">Image</label>
+            <input
+              type="file"
+              name="image"
+              onChange={handleFileChange}
+              required
+              className="w-full border border-gray-300 rounded-md p-2"
+              accept="image/*"
+            />
+          </div>
           <div className="flex justify-end space-x-4">
             <button
               type="reset"
               onClick={() =>
                 setAdvertisement({
-                  mentorName: '',
-                  services: '',
-                  description: '',
-                  contactEmail: '',
-                  contactPhone: '',
-                  experience: '',
-                  location: '',
-                  availableSlots: '',
-                  priceRange: '',
+                  mentorName: "",
+                  services: "",
+                  description: "",
+                  contactEmail: "",
+                  contactPhone: "",
+                  experience: "",
+                  location: "",
+                  availableSlots: "",
+                  priceRange: "",
+                  image: null,
                 })
               }
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none"
@@ -201,7 +301,7 @@ function AddAdvertisement() {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none"
             >
-              {mutation.isPending ? 'Adding...' : 'Add Advertisement'}
+              {mutation.isPending ? "Adding..." : "Add Advertisement"}
             </button>
           </div>
         </form>

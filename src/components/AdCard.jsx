@@ -5,6 +5,9 @@ function AdvertisementCard({ advertisement }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  console.log(advertisement.image);
+  
+
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };

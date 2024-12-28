@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { jwtDecode } from 'jwt-decode';
 
 function Login() {
-  const predefinedRole = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : '';
+  let predefinedRole = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : '';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +19,8 @@ function Login() {
       // Decode the token
       const decodedToken = jwtDecode(data.token);
       console.log('Decoded Token:', decodedToken);
+
+      predefinedRole = decodedToken.role;
 
       // Save token and decoded data to local storage
       localStorage.setItem('token', data.token);

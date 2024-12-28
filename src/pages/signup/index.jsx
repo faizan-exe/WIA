@@ -20,7 +20,7 @@ function Signup() {
     onSuccess: (data) => {
       console.log("Signup successful:", data);
       // Redirect on successful signup
-      navigate('/create-profile'); 
+      navigate('/'); 
     },
     onError: (err) => {
       console.error(err);

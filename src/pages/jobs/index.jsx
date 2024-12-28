@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import JobCard from '../../components/JobCard';
 
 const Jobs = () => {
-  const [products] = useState([
+  const [products, setProducts] = useState([
     {
       id: 1,
       image: 'https://via.placeholder.com/100',

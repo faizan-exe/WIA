@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import Header from '../../components/Header';
 import { useMutation } from '@tanstack/react-query';
 import { createProduct } from '../../Repository/productRepo';
+import axios from 'axios';
 
 function AddJob() {
   const [productData, setProductData] = useState({
-    jobName: '',
-    jobDescription: '',
-    price: '',
-    stockQuantity: '',
-    category: '',
+    jobName: 'Sample Job',  // Prefilled field
+    jobDescription: 'This is a sample job description.',  // Prefilled field
+    price: '200',  // Prefilled field
+    stockQuantity: '10',  // Prefilled field
+    category: 'Skincare',  // Prefilled field
     sku: (Math.random() * 90000000 + 10000000).toFixed(0).toString(),
-    tags: '',
-    discount: '',
-    launchDate: '',
-    warrantyInfo: '',
+    tags: 'skincare, beauty',  // Prefilled field
+    discount: '10',  // Prefilled field
+    launchDate: '2024-01-01',  // Prefilled field
+    warrantyInfo: '2 years warranty',  // Prefilled field
     image: null,  // Initially no image
   });
 
@@ -43,8 +44,29 @@ function AddJob() {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Upload the image to ImgBB if an image is selected
+    let imageUrl = null;
+    if (productData.image) {
+      const formData = new FormData();
+      formData.append('image', productData.image);
+      const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+        params: {
+          key: '5789a9111a607fd180aa3981f47e7c36', // Add your ImgBB API key here
+        },
+      });
+
+      if (response.data.success) {
+        imageUrl = response.data.data.url;  // Get the URL of the uploaded image
+      } else {
+        console.error('Error uploading image');
+        return;
+      }
+    }
+
+    // Prepare the job data
     const jobData = {
       title: productData.jobName,
       description: productData.jobDescription,
@@ -56,7 +78,7 @@ function AddJob() {
       discount: productData.discount ? parseFloat(productData.discount) : undefined,
       launchDate: productData.launchDate ? new Date(productData.launchDate) : undefined,
       warrantyInfo: productData.warrantyInfo,
-      image: productData.image ? productData.image.name : undefined, // Handle image file name
+      image: imageUrl,  // Send the image URL to the backend
     };
 
     // Call the mutate function from React Query to trigger the API request
