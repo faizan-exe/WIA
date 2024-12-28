@@ -14,10 +14,11 @@ export const loginUser = async (userData) => {
 
 export const getUserProfile = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/user`, {
+    const response = await axios.get(`http://localhost:5001/api/auth/user`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
     });
-    return response.data;
+    console.log(response.data);
+    return response.data.user;
 }

@@ -1,38 +1,34 @@
 import axios from 'axios';
 
-const token = localStorage.getItem('token');
 
 export const createMentorAd = async (adData) => {
-  try {
     const response = await axios.post('http://localhost:5001/api/mentors/ads', adData, {
       headers: {
         'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
         'Content-Type': 'application/json',
       }
     });
-
-    console.log('Ad created successfully:', response.data.ad);
-    return response.data.ad; // The newly created ad
-  } catch (error) {
-    console.error('Error creating ad:', error.response ? error.response.data.message : error.message);
-    return null;
-  }
+  return response.data.ad;
 };
 
 export const getMentorAds = async () => {
+  const token = localStorage.getItem('token');
   console.log('Token:', token);
   try {
-    const response = await axios.get('http://localhost:5001/api/mentors/ads', {
+    let response = await axios.get('http://localhost:5001/api/mentors/ads', {
       headers: {
         'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
       }
     });
 
     console.log('Fetched ads:', response.data.ads);
+  response.data.ads.map((ad) => {
+    ad.image = 'https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953';
+  })
     return response.data.ads; // The list of mentor's ads
   } catch (error) {
     console.error('Error fetching ads:', error.response ? error.response.data.message : error.message);
-    return [];
+    throw error;
   }
 };
 
@@ -50,7 +46,7 @@ export const editMentorAd = async (adId, adData) => {
   }
   catch (error) {
     console.error('Error updating ad:', error.response ? error.response.data.message : error.message);
-    return null;
+    throw error;
   }
 }
 

@@ -26,7 +26,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/create-profile" element={<CreateProfile />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:id" element={<SpecificProfile />} />
           <Route path="/add-job" element={<AddJob />} />

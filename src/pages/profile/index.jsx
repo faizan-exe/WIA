@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
+import { getUserProfile } from '../../Repository/authRepo';
+import { useQuery } from '@tanstack/react-query';
 
 function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Sample data to simulate form submission
-  const [userProfile, setUserProfile] = useState({
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    password: 'password123',
-    role: 'mentor', // Possible values: 'woman', 'mentor', 'org'
+  
+  const { data: userProfile, error, isLoading, isError, isSuccess } = useQuery({
+    // Query key for caching
+    queryKey: ['userProfile'],
+    // Query function to fetch data
+    queryFn: getUserProfile,
   });
-
   // Handle input changes in the modal
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +22,13 @@ function Profile() {
       [name]: value,
     }));
   };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <>
@@ -75,17 +84,6 @@ function Profile() {
                   type="email"
                   name="email"
                   value={userProfile.email}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={userProfile.password}
                   onChange={handleInputChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />

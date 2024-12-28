@@ -17,15 +17,16 @@ function Login() {
       console.log('Login successful:', data);
 
       // Decode the token
-      const decodedToken = jwtDecode(data.token); 
+      const decodedToken = jwtDecode(data.token);
       console.log('Decoded Token:', decodedToken);
 
       // Save token and decoded data to local storage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(decodedToken));
 
-     if (predefinedRole === 'mentor') {
-      navigate('/my-ad');}
+      if (predefinedRole === 'mentor') {
+        navigate('/my-ad');
+      }
     },
     onError: (error) => {
       setError(error?.response?.data?.message || 'An error occurred');
@@ -35,7 +36,7 @@ function Login() {
   const handleLogin = (event) => {
     event.preventDefault();
     const userData = { email, password };
-    
+
     // Trigger the mutation
     mutation.mutate(userData);
   };
@@ -77,9 +78,9 @@ function Login() {
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            disabled={mutation.isPending}  
+            disabled={mutation.isPending}
           >
-            {mutation.isPending ?  <span className='loader'/>: 'Login'}
+            {mutation.isPending ? <span className='loader' /> : 'Login'}
           </button>
         </form>
         <p className="text-sm text-center text-gray-600">
