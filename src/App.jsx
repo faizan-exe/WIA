@@ -30,7 +30,7 @@ function App() {
           <Route path="/profile/:id" element={<SpecificProfile />} />
           <Route path="/add-job" element={<AddJob />} />
           <Route path="/org-jobs" element={<OrgJobs />} />
-          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/products" element={<Jobs />} />
           <Route path="/add-ad" element={<AddAdvertisement />} />
           <Route path="/my-ad" element={<MyAd />} />
           <Route path="/mentors" element={<Mentors />} />

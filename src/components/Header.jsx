@@ -19,7 +19,7 @@ function Header({ userRole }) {
           {userRole === 'woman' && (
             <>
               <Link
-                to="/jobs"
+                to="/products"
                 className="px-4 py-2 rounded-lg bg-indigo-700 hover:bg-indigo-800 transition"
               >
                 Jobs

@@ -19,7 +19,18 @@ export const getProducts = async () => {
     const response = await axios.get(`${API_URL}/`, {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,   
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    return response.data;
+}
+
+export const getAllProducts = async () => {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${API_URL}/all`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         }
     });
     return response.data;

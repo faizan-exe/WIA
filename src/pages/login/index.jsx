@@ -32,6 +32,9 @@ function Login() {
       if (predefinedRole === 'org') {
         navigate('/org-jobs');
       }
+      else {
+        navigate('/jobs');
+      }
     },
     onError: (error) => {
       setError(error?.response?.data?.message || 'An error occurred');
