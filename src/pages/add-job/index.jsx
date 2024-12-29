@@ -3,19 +3,21 @@ import Header from '../../components/Header';
 import { useMutation } from '@tanstack/react-query';
 import { createProduct } from '../../Repository/productRepo';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function AddJob() {
+  const navigation = useNavigate();
   const [productData, setProductData] = useState({
-    jobName: 'Sample Job',  // Prefilled field
-    jobDescription: 'This is a sample job description.',  // Prefilled field
-    price: '200',  // Prefilled field
-    stockQuantity: '10',  // Prefilled field
-    category: 'Skincare',  // Prefilled field
+    jobName: '',  // Prefilled field
+    jobDescription: '',  // Prefilled field
+    price: '',  // Prefilled field
+    stockQuantity: '',  // Prefilled field
+    category: '',  // Prefilled field
     sku: (Math.random() * 90000000 + 10000000).toFixed(0).toString(),
-    tags: 'skincare, beauty',  // Prefilled field
-    discount: '10',  // Prefilled field
-    launchDate: '2024-01-01',  // Prefilled field
-    warrantyInfo: '2 years warranty',  // Prefilled field
+    tags: '',  // Prefilled field
+    discount: '',  // Prefilled field
+    launchDate: '',  // Prefilled field
+    warrantyInfo: '',  // Prefilled field
     image: null,  // Initially no image
   });
 
@@ -34,10 +36,12 @@ function AddJob() {
     }));
   };
 
-  const { mutate, isLoading, isError, error, isSuccess, data } = useMutation({
+  const { mutate, isPending, isError,} = useMutation({
     mutationFn: createProduct,
     onSuccess: (data) => {
       console.log('Product added successfully!', data);
+      alert('Product added successfully!');
+     navigation('/org-jobs')
     },
     onError: (err) => {
       console.error('Error:', err);
@@ -193,10 +197,11 @@ function AddJob() {
                 type="text"
                 name="sku"
                 value={productData.sku}
+                readOnly
                 className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter SKU"
               />
             </div>
+
 
             {/* Tags */}
             <div>
@@ -255,7 +260,7 @@ function AddJob() {
                 type="submit"
                 className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                {isLoading ? <span className='loader' /> : 'Add Job'}
+                {isPending? "Adding Product": 'Add Product'}
               </button>
             </div>
             {isError && <p className="text-red-600">{"Something went wrong !"}</p>}

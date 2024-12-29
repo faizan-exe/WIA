@@ -1,75 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import JobCard from '../../components/JobCard';
-
+import { getAllProducts } from '../../Repository/productRepo';
+import { useQuery } from '@tanstack/react-query';
 const Jobs = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Wireless Bluetooth Headphones',
-      productDescription:
-        'High-quality wireless Bluetooth headphones with noise cancellation and 20-hour battery life.',
-      price: '$99.99',
-      category: 'Electronics',
-      stockQuantity: '50 units available',
-      sku: 'WBH123',
-      tags: 'Wireless, Bluetooth, Noise Cancellation',
-      organizationName: 'AudioTech Inc.',
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Smart Fitness Watch',
-      productDescription:
-        'Track your fitness goals with this smart watch featuring heart rate monitoring, GPS, and waterproof design.',
-      price: '$149.99',
-      category: 'Wearables',
-      stockQuantity: '100 units available',
-      sku: 'SFW456',
-      tags: 'Fitness, Smartwatch, GPS',
-      organizationName: 'HealthGear Ltd.',
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Ergonomic Office Chair',
-      productDescription:
-        'Stay comfortable while working with this ergonomic chair, designed to reduce back strain.',
-      price: '$199.99',
-      category: 'Furniture',
-      stockQuantity: '30 units available',
-      sku: 'EOC789',
-      tags: 'Ergonomic, Office, Furniture',
-      organizationName: 'ComfortWorks',
-    },
-    {
-      id: 4,
-      image: 'https://via.placeholder.com/100',
-      productName: '4K Ultra HD TV',
-      productDescription:
-        'Experience stunning visuals with this 55-inch 4K Ultra HD TV, complete with HDR support and smart features.',
-      price: '$499.99',
-      category: 'Electronics',
-      stockQuantity: '20 units available',
-      sku: '4KTV101',
-      tags: '4K, HDR, Smart TV',
-      organizationName: 'VisionTech',
-    },
-    {
-      id: 5,
-      image: 'https://via.placeholder.com/100',
-      productName: 'Premium Coffee Maker',
-      productDescription:
-        'Brew your favorite coffee with this premium coffee maker, featuring a built-in grinder and milk frother.',
-      price: '$249.99',
-      category: 'Home Appliances',
-      stockQuantity: '25 units available',
-      sku: 'PCM202',
-      tags: 'Coffee Maker, Grinder, Frother',
-      organizationName: 'BrewMaster Co.',
-    },
-  ]);
+  const {
+    data: products,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["allProducts"],
+    queryFn: getAllProducts,
+  });
 
   const [cart, setCart] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,37 +21,38 @@ const Jobs = () => {
   // Function to handle adding items to cart
   const addToCart = (product) => {
     const updatedCart = [...cart];
-    const productIndex = updatedCart.findIndex((item) => item.id === product.id);
+    const productIndex = updatedCart.findIndex((item) => item._id === product._id);
 
     if (productIndex > -1) {
-      // If the product is already in the cart, increase the quantity
       updatedCart[productIndex].quantity += 1;
     } else {
-      // Otherwise, add the product with quantity 1
-      updatedCart.push({ ...product, quantity: 1 });
+      updatedCart.push({
+        ...product,
+        quantity: 1,
+        price: typeof product.price === "string"
+          ? parseFloat(product.price.replace("$", ""))
+          : product.price,
+      });
     }
 
     setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   // Function to handle removing items from cart
   const removeFromCart = (productId) => {
     const updatedCart = cart
       .map((item) => {
-        if (item.id === productId && item.quantity > 1) {
-          // Decrease quantity if more than 1
+        if (item._id === productId && item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
-        // If quantity is 1, remove the item entirely
-        return null;
+        return item._id === productId ? null : item;
       })
-      .filter((item) => item !== null); // Filter out the null values (items removed)
-  
+      .filter((item) => item !== null);
+
     setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
-  
 
   // Open modal
   const openModal = () => {
@@ -121,31 +66,39 @@ const Jobs = () => {
 
   // Load cart from localStorage on page load
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(savedCart);
   }, []);
 
   // Calculate total price
   const calculateTotalPrice = () => {
-    return cart.reduce((total, item) => {
-      const price = parseFloat(item.price.replace('$', ''));
-      return total + price * item.quantity;
-    }, 0).toFixed(2);
+    return cart
+      .reduce((total, item) => {
+        const price = typeof item.price === "string"
+          ? parseFloat(item.price.replace("$", ""))
+          : item.price;
+        return total + price * item.quantity;
+      }, 0)
+      .toFixed(2);
   };
 
-  // Calculate the total number of items in the cart (based on quantity)
+  // Calculate total number of items in cart
   const calculateTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
-      <Header userRole={'job-seeker'} />
+      <Header userRole={"woman"} />
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 space-y-4">
         <h1 className="text-3xl font-bold text-gray-800">Products</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="relative">
+            <div key={product._id} className="relative">
               <JobCard product={product} />
               <button
                 onClick={() => addToCart(product)}
@@ -176,13 +129,13 @@ const Jobs = () => {
             <ul className="space-y-4">
               {cart.length > 0 ? (
                 cart.map((item) => (
-                  <li key={item.id} className="flex justify-between items-center">
+                  <li key={item._id} className="flex justify-between items-center">
                     <span>
-                      {item.productName} {item.quantity > 1 && `x${item.quantity}`}
+                      {item.title} {item.quantity > 1 && `x${item.quantity}`}
                     </span>
-                    <span>{item.price}</span>
+                    <span>${item.price}</span>
                     <button
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item._id)}
                       className="text-red-500 hover:text-red-700"
                     >
                       Remove
@@ -202,7 +155,16 @@ const Jobs = () => {
                 >
                   Close
                 </button>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 ml-2">
+                <button className= {`px-4 py-2 ${cart.length===0? "bg-slate-500":" bg-green-600"} text-white rounded-md hover:bg-green-700 ml-2`}
+                  disabled={cart.length === 0}
+                  onClick={() => {
+                    closeModal();
+                    setTimeout(() => {
+                      alert("Checkout successful and your total is: $" + calculateTotalPrice());
+                    }, 100); // Slight delay to allow modal to close
+
+                    localStorage.removeItem("cart");
+                  }}>
                   Checkout
                 </button>
               </div>

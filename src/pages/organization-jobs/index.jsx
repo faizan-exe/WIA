@@ -2,35 +2,43 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import JobCard from '../../components/JobCard';
 import axios from 'axios';
+import { deleteProduct, editProduct } from '../../Repository/productRepo';
 
 function OrgJobs() {
   const [productPosts, setProductPosts] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
 
-  // Fetch jobs on component mount
-  useEffect(() => {
+    // Fetch jobs function
     const fetchJobs = async () => {
       try {
-        // Get the token from localStorage
         const token = localStorage.getItem('token');
-        
-        // If token exists, set it in the headers of the request
-        const response = await axios.get('http://localhost:5001/api/jobs/my-jobs', {
+        const response = await axios.get('http://localhost:5001/api/jobs/', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        // Update state with fetched product posts
         setProductPosts(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
       }
     };
 
-    fetchJobs();
-  }, []); // Empty dependency array ensures it runs only once after the initial render
+    const handleEditProduct = async (product) => {
+      try {
+        const response = await editProduct(product);
+        console.log('Job edited:', response);
+        await fetchJobs();
+      } catch (error) {
+        console.error('Error editing job:', error);
+      }
+    };
+  
+    // Fetch jobs on component mount
+    useEffect(() => {
+      fetchJobs();
+    }, []);
+  
 
   const handleEditClick = (product) => {
     setCurrentProduct(product);
@@ -47,14 +55,38 @@ function OrgJobs() {
     setCurrentProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveChanges = () => {
-    setProductPosts((prev) =>
-      prev.map((product) =>
-        product._id === currentProduct._id ? { ...currentProduct } : product
-      )
-    );
-    handleModalClose();
+  const handleDelete = async (id) => {
+    try {
+      const reponse = await deleteProduct(id);
+      console.log('Job deleted:', reponse);
+      await fetchJobs();
+    }
+    catch (error) {
+      console.error('Error deleting job:', error);
+    }
+  }
+  const handleSaveChanges = async () => {
+    const updatedProduct = {
+      ...currentProduct,
+      tags: Array.isArray(currentProduct.tags)
+        ? currentProduct.tags.join(', ') // Join array to a comma-separated string
+        : currentProduct.tags, // If it's already a string, use it as is
+    };
+  console.log('Updated Product:', updatedProduct);
+    try {
+      await handleEditProduct(updatedProduct); // Make API call
+      setProductPosts((prev) =>
+        prev.map((product) =>
+          product._id === updatedProduct._id ? updatedProduct : product
+        )
+      );
+      handleModalClose();
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
   };
+  
+  
 
   return (
     <>
@@ -75,7 +107,7 @@ function OrgJobs() {
                 >
                   Edit
                 </button>
-                <button className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none">
+                <button className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none" onClick={() => handleDelete(product._id)}>
                   Delete
                 </button>
               </div>
@@ -158,7 +190,7 @@ function OrgJobs() {
                   type="text"
                   name="sku"
                   value={currentProduct.sku}
-                  onChange={handleInputChange}
+                  readOnly
                   className="w-full border border-gray-300 rounded-md p-2"
                 />
               </div>

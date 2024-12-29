@@ -32,6 +32,9 @@ function Login() {
       if (predefinedRole === 'org') {
         navigate('/org-jobs');
       }
+      if (predefinedRole === 'woman') {
+        navigate('/products');
+      }
     },
     onError: (error) => {
       setError(error?.response?.data?.message || 'An error occurred');

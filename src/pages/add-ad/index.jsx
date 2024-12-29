@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../../components/Header";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createMentorAd } from "../../Repository/mentorRepo";
 import axios from 'axios'; 
 import { useNavigate } from "react-router-dom";
@@ -120,10 +120,12 @@ function AddAdvertisement() {
     mutationFn: createMentorAd,
     onSuccess: (data) => {
       console.log("Advertisement added successfully!", data);
+      QueryClient.invalidateQueries("getAllAds");
     },
     onError: (error) => {
       console.error("Error adding advertisement:", error);
     },
+    
   });
 
   return (

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import AdvertisementCard from "../../components/AdCard";
 import Header from "../../components/Header";
-import { useQuery } from "@tanstack/react-query";
-import { getMentorAds } from "../../Repository/mentorRepo";
+import { QueryClient, useQuery } from "@tanstack/react-query";
+import { deleteAd, editMentorAd, getMentorAds } from "../../Repository/mentorRepo";
+import axios from "axios";
 
 function MyAd() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,111 +14,39 @@ function MyAd() {
     description: "",
     contactEmail: "",
     contactPhone: "",
-    image: null, // Update image to store a file
+    image: null,
     experience: 0,
     location: "",
     availableSlots: "",
     priceRange: "",
   });
 
-  const {
-    data: ads,
-    error,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useQuery({
+  const { data: ads, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["mentorAds"],
     queryFn: getMentorAds,
-    retry: false, // Disable automatic retries
   });
-
-  // const sampleAdvertisements = [
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   {
-  //     mentorName: 'John Doe',
-  //     services: 'Career Coaching, Resume Building',
-  //     description: 'Helping professionals advance their careers with personalized guidance.',
-  //     contactEmail: 'johndoe@example.com',
-  //     contactPhone: '123-456-7890',
-  //     image: "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953",
-  //     experience: 5,
-  //     location: 'Remote',
-  //     availableSlots: 'Weekends, Evenings',
-  //     priceRange: '$50 - $100 per session',
-  //   },
-  //   // More sample advertisements...
-  // ];
 
   const handleEdit = (advertisement) => {
     setCurrentAd(advertisement);
     setFormData({
       ...advertisement,
-      image: null, // Reset the image when editing
+      image: null, // Reset the image when editing (or handle separately)
     });
     setIsModalOpen(true);
   };
 
-  const handleDelete = (advertisement) => {
+  const handleDelete =async (advertisement) => {
     console.log("Deleting Advertisement:", advertisement);
+    try{
+      const response = await deleteAd(advertisement._id);
+      console.log("Advertisement deleted successfully:", response);
+      alert("Advertisement deleted successfully");
+      refetch();
+    }
+    catch(error){
+      console.error("Error deleting advertisement:", error);
+    }
+    
     // Logic to delete the advertisement
   };
 
@@ -138,13 +67,46 @@ function MyAd() {
     });
   };
 
-  const handleSaveChanges = () => {
-    // Logic to save changes to the advertisement
-    console.log("Updated Advertisement:", formData);
+  const handleSaveChanges = async () => {
+    let imageUrl = currentAd.image; 
+
+    if (formData.image) {
+      const formDataToUpload = new FormData();
+      formDataToUpload.append("image", formData.image);
+
+      try {
+        const response = await axios.post(
+          `https://api.imgbb.com/1/upload?key=5789a9111a607fd180aa3981f47e7c36`, 
+          formDataToUpload
+        );
+
+        if (response.data && response.data.data) {
+          imageUrl = response.data.data.url; 
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Error uploading image");
+        return;
+      }
+    }
+
+
+    const updatedAd = {
+      ...formData,
+      image: imageUrl, // Handle image upload if necessary
+    };
+    console.log("Updating Advertisement:", currentAd, updatedAd);
+
+    try {
+      const response = await editMentorAd(currentAd._id, updatedAd);
+      refetch();
+      console.log("Advertisement updated successfully:", response);
+    } catch (error) {
+      console.error("Error updating advertisement:", error);
+    }
     setIsModalOpen(false);
   };
 
-  // Prevent background scroll when modal is open
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = "hidden";
@@ -152,21 +114,9 @@ function MyAd() {
       document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = "auto"; // Reset overflow when component unmounts
+      document.body.style.overflow = "auto";
     };
   }, [isModalOpen]);
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;  // You can show a loading spinner or text
-  // }
-
-  // if (isError) {
-  //   return <div>Error: {error.message}</div>;  // Show error message
-  // }
-
-  // if (isSuccess && ads) {
-  //   console.log("Data fetched successfully:", ads);
-  // }
 
   return (
     <>
@@ -196,11 +146,8 @@ function MyAd() {
                 </div>
               </div>
             ))}
-
         </div>
-            {
-              ads?.length === 0 && <p className="mx-auto ">No advertisements added yet.</p>
-            }
+        {ads?.length === 0 && <p className="mx-auto">No advertisements added yet.</p>}
       </div>
 
       {/* Modal for Edit */}
@@ -208,9 +155,7 @@ function MyAd() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg overflow-hidden">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Edit Advertisement
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-800">Edit Advertisement</h2>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-600 hover:text-gray-800 focus:outline-none"
@@ -324,7 +269,7 @@ function MyAd() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                 >
                   Cancel
                 </button>

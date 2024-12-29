@@ -69,7 +69,7 @@ const Courses = () => {
 
   return (
     <>
-      <Header userRole={'job-seeker'} />
+      <Header userRole={'woman'} />
 
       {isLoading ? (
         <div className="flex justify-center items-center p-6">Loading...</div>

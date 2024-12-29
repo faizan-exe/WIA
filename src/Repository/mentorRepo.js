@@ -23,12 +23,6 @@ export const getMentorAds = async () => {
         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
       },
     });
-
-    // console.log("Fetched ads:", response.data.ads);
-    // response.data.ads.map((ad) => {
-    //   ad.image =
-    //     "https://static.wikia.nocookie.net/shipping/images/0/09/Batman.jpg/revision/latest?cb=20210522210953";
-    // });
     return response.data.ads; 
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -45,6 +39,8 @@ export const getMentorAds = async () => {
 
 
 export const editMentorAd = async (adId, adData) => {
+  const token = localStorage.getItem("token");
+  console.log("Token:", adData,adId);
   try {
     const response = await axios.put(
       `http://localhost:5001/api/mentors/ads/${adId}`,
@@ -67,3 +63,30 @@ export const editMentorAd = async (adId, adData) => {
     throw error;
   }
 };
+
+export const getAllAds = async () => {
+  const response = await axios.get("http://localhost:5001/api/mentors/allAds");
+  return response.data;
+  }
+
+export const deleteAd = async (adId) => {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.delete(
+      `http://localhost:5001/api/mentors/ads/${adId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("Ad deleted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting ad:",
+      error.response ? error.response.data.message : error.message
+    );
+    throw error;
+  }
+}
