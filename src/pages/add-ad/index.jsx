@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import { useMutation } from "@tanstack/react-query";
 import { createMentorAd } from "../../Repository/mentorRepo";
 import axios from 'axios'; 
+import { useNavigate } from "react-router-dom";
 
 function AddAdvertisement() {
   const [advertisement, setAdvertisement] = useState({
@@ -17,6 +18,8 @@ function AddAdvertisement() {
     priceRange: "",
     image: null,
   });
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +94,8 @@ function AddAdvertisement() {
         // Send adData to your backend to save the ad
         mutation.mutate(adData);
 
+
+        navigate('/my-ad')
         // Reset form after submission
         setAdvertisement({
           mentorName: "",
