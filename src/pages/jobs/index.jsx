@@ -155,13 +155,16 @@ const Jobs = () => {
                 >
                   Close
                 </button>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 ml-2" onClick={() => {
-                  closeModal();
-                  setTimeout(() => {
-                    alert("Checkout successful and your total is: $" + calculateTotalPrice());
-                  }, 100); // Slight delay to allow modal to close
-                  setCart([]);
-                }}>
+                <button className= {`px-4 py-2 ${cart.length===0? "bg-slate-500":" bg-green-600"} text-white rounded-md hover:bg-green-700 ml-2`}
+                  disabled={cart.length === 0}
+                  onClick={() => {
+                    closeModal();
+                    setTimeout(() => {
+                      alert("Checkout successful and your total is: $" + calculateTotalPrice());
+                    }, 100); // Slight delay to allow modal to close
+
+                    localStorage.removeItem("cart");
+                  }}>
                   Checkout
                 </button>
               </div>

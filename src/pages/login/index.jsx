@@ -32,8 +32,8 @@ function Login() {
       if (predefinedRole === 'org') {
         navigate('/org-jobs');
       }
-      else {
-        navigate('/jobs');
+      if (predefinedRole === 'woman') {
+        navigate('/products');
       }
     },
     onError: (error) => {

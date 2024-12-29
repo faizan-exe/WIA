@@ -16,7 +16,7 @@ function OrgJobs() {
         const token = localStorage.getItem('token');
         
         // If token exists, set it in the headers of the request
-        const response = await axios.get('http://localhost:5001/api/jobs/my-jobs', {
+        const response = await axios.get('http://localhost:5001/api/jobs/', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
