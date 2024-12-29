@@ -68,3 +68,25 @@ export const getAllAds = async () => {
   const response = await axios.get("http://localhost:5001/api/mentors/allAds");
   return response.data;
   }
+
+export const deleteAd = async (adId) => {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.delete(
+      `http://localhost:5001/api/mentors/ads/${adId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("Ad deleted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting ad:",
+      error.response ? error.response.data.message : error.message
+    );
+    throw error;
+  }
+}

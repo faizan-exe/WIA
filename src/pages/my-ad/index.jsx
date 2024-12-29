@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdvertisementCard from "../../components/AdCard";
 import Header from "../../components/Header";
 import { QueryClient, useQuery } from "@tanstack/react-query";
-import { editMentorAd, getMentorAds } from "../../Repository/mentorRepo";
+import { deleteAd, editMentorAd, getMentorAds } from "../../Repository/mentorRepo";
 import axios from "axios";
 
 function MyAd() {
@@ -35,8 +35,18 @@ function MyAd() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (advertisement) => {
+  const handleDelete =async (advertisement) => {
     console.log("Deleting Advertisement:", advertisement);
+    try{
+      const response = await deleteAd(advertisement._id);
+      console.log("Advertisement deleted successfully:", response);
+      alert("Advertisement deleted successfully");
+      refetch();
+    }
+    catch(error){
+      console.error("Error deleting advertisement:", error);
+    }
+    
     // Logic to delete the advertisement
   };
 
