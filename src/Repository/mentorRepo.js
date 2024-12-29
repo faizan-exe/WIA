@@ -65,9 +65,23 @@ export const editMentorAd = async (adId, adData) => {
 };
 
 export const getAllAds = async () => {
-  const response = await axios.get("http://localhost:5001/api/mentors/allAds");
-  return response.data;
+  const token = localStorage.getItem("token"); // Get the token from localStorage
+  try {
+    const response = await axios.get("http://localhost:5001/api/mentors/allAds", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add the Bearer token to the headers
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching all ads:",
+      error.response ? error.response.data.message : error.message
+    );
+    throw error;
   }
+};
+
 
 export const deleteAd = async (adId) => {
   const token = localStorage.getItem("token");

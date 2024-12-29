@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function JobCard({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +10,6 @@ function JobCard({ product }) {
   };
 
   console.log(product);
-  
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
@@ -24,7 +23,9 @@ function JobCard({ product }) {
           />
         )}
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">{product.title}</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {product.title}
+          </h2>
           <p className="text-gray-600 text-sm">Price: {product.price}</p>
         </div>
       </div>
@@ -49,7 +50,9 @@ function JobCard({ product }) {
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">Product Details</h3>
+              <h3 className="text-xl font-semibold text-gray-800">
+                Product Details
+              </h3>
               <button
                 onClick={handleModalToggle}
                 className="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -61,12 +64,16 @@ function JobCard({ product }) {
             {/* Modal Content */}
             <div className="space-y-4">
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Product Name</h4>
+                <h4 className="text-lg font-medium text-gray-700">
+                  Product Name
+                </h4>
                 <p className="text-gray-600">{product.title}</p>
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Product Description</h4>
+                <h4 className="text-lg font-medium text-gray-700">
+                  Product Description
+                </h4>
                 <p className="text-gray-600">{product.description}</p>
               </div>
 
@@ -81,7 +88,9 @@ function JobCard({ product }) {
               </div>
 
               <div>
-                <h4 className="text-lg font-medium text-gray-700">Stock Quantity</h4>
+                <h4 className="text-lg font-medium text-gray-700">
+                  Stock Quantity
+                </h4>
                 <p className="text-gray-600">{product.stockQuantity}</p>
               </div>
 
@@ -92,13 +101,18 @@ function JobCard({ product }) {
 
               <div>
                 <h4 className="text-lg font-medium text-gray-700">Tags</h4>
-                <p className="text-gray-600">{
-                  product.tags.map((tag) => (
-                    <span key={tag} className="mr-2 inline-block bg-gray-200 rounded-full px-2 py-1 text-sm mb-2">
-                      {tag}
-                    </span>
-                  ))
-                  }</p>
+                <p className="text-gray-600">
+                  {product.tags?.map(
+                    (tag, index) => (
+                      <span
+                        key={index}
+                        className="mr-2 inline-block bg-gray-200 rounded-full px-2 py-1 text-sm mb-2"
+                      >
+                        {tag.trim()}
+                      </span>
+                    )
+                  )}
+                </p>
               </div>
             </div>
 
