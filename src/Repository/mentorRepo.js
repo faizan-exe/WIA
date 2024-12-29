@@ -39,6 +39,8 @@ export const getMentorAds = async () => {
 
 
 export const editMentorAd = async (adId, adData) => {
+  const token = localStorage.getItem("token");
+  console.log("Token:", adData,adId);
   try {
     const response = await axios.put(
       `http://localhost:5001/api/mentors/ads/${adId}`,
