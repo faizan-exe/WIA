@@ -14,7 +14,7 @@ export const loginUser = async (userData) => {
 
 export const getUserProfile = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://localhost:5001/api/auth/user`, {
+    const response = await axios.get(`https://web-be-180924265462.us-central1.run.app/api/auth/user`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

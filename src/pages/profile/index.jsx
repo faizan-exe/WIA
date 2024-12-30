@@ -85,7 +85,7 @@ function Profile() {
     // Perform the API call to update the user profile
     try {
       const res = await axios.put(
-        'http://localhost:5001/api/auth/user/', // Replace with your actual backend API endpoint
+        'https://web-be-180924265462.us-central1.run.app/api/auth/user/', // Replace with your actual backend API endpoint
         updatedProfile,
         {
           headers: {

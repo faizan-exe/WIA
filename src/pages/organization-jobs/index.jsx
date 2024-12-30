@@ -13,7 +13,7 @@ function OrgJobs() {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5001/api/jobs/', {
+        const response = await axios.get('https://web-be-180924265462.us-central1.run.app/api/jobs/', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

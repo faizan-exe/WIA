@@ -3,7 +3,7 @@ import axios from "axios";
 export const createMentorAd = async (adData) => {
   const token = localStorage.getItem("token"); // Replace with actual token
   const response = await axios.post(
-    "http://localhost:5001/api/mentors/ads",
+    "https://web-be-180924265462.us-central1.run.app/api/mentors/ads",
     adData,
     {
       headers: {
@@ -18,7 +18,7 @@ export const getMentorAds = async () => {
   const token = localStorage.getItem("token");
   console.log("Token:", token);
   try {
-    let response = await axios.get("http://localhost:5001/api/mentors/ads", {
+    let response = await axios.get("https://web-be-180924265462.us-central1.run.app/api/mentors/ads", {
       headers: {
         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
       },
@@ -43,7 +43,7 @@ export const editMentorAd = async (adId, adData) => {
   console.log("Token:", adData,adId);
   try {
     const response = await axios.put(
-      `http://localhost:5001/api/mentors/ads/${adId}`,
+      `https://web-be-180924265462.us-central1.run.app/api/mentors/ads/${adId}`,
       adData,
       {
         headers: {
@@ -67,7 +67,7 @@ export const editMentorAd = async (adId, adData) => {
 export const getAllAds = async () => {
   const token = localStorage.getItem("token"); // Get the token from localStorage
   try {
-    const response = await axios.get("http://localhost:5001/api/mentors/allAds", {
+    const response = await axios.get("https://web-be-180924265462.us-central1.run.app/api/mentors/allAds", {
       headers: {
         Authorization: `Bearer ${token}`, // Add the Bearer token to the headers
       },
@@ -87,7 +87,7 @@ export const deleteAd = async (adId) => {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.delete(
-      `http://localhost:5001/api/mentors/ads/${adId}`,
+      `https://web-be-180924265462.us-central1.run.app/api/mentors/ads/${adId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
